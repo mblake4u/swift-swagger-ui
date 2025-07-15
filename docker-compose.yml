@@ -1,0 +1,11 @@
+services:
+  swagger-ui:
+    image: docker.swagger.io/swaggerapi/swagger-ui
+    container_name: custom-swagger-ui
+    ports:
+      - "81:8080"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./SWIFT-API-Swift-Messaging-2.0.0-swagger.yaml:/usr/share/nginx/html/SWIFT-API-Swift-Messaging-2.0.0-swagger.yaml:ro
+    restart: unless-stopped
+
