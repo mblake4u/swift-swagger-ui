@@ -8,38 +8,8 @@ info:
     The Swift Messaging API is the brand new connectivity feature designed for our Alliance Cloud customers and provides bidirectional flows for Back Offices to exchange messages (including copy of messages, transmission reports, delivery reports, delivery notifications) with Alliance Cloud, via RESTful APIs. So now you can use APIs to leverage the wide range of messaging services available on SWIFT – including all the FIN, InterAct, and FileAct services supported by Alliance Cloud. Upload and download endpoints are available per SWIFT service (FIN, InterAct, FileAct), while retrieving the list of available messages to be downloaded is available agnostically for all services.
 
     The Swift Messaging API supports batching for both sending and receiving messages (FIN and InterAct only).
-    
-    
-    Release Notes
 
-    Changes made since version 1.1.0:
-
-    * Version in URLs updated to v2 (instead of v1)
-    
-    * Two new values for 'distribution_type' available: 'archive' and 'export'
-    
-    * Add 'export_content' and 'export_format' properties for a distribution, available when the distribution_type is 'export'
-
-    * Introduce endpoints for downloading archive distributions
-    
-    * Introduce endpoints for downloading distributions of message exports
-    
-    * 'version' field available for received FIN, InterAct, and FileAct message and companion_info objects
-    
-    * 'syntax_version' field available for received FIN messages, inside the network_info object
-    
-    * Update FileAct transmission report and delivery report objects 'message' property to 'companion_info'
-    
-    * Update 'mirs_balance_checkpoint_date_time', 'local_output_time', and 'message_input_time' FIN fields type from date-time to plain string (14 characters). These fields carry local time information set by FIN for which the exact used time zone cannot be known. Format: 'yyyyMMddHHmmss', example value: '20230725105547'
-    
-    * Rename 'distributionId' query parameter to 'distribution-id'
-    
-    * 404 error responses now carry the same JSON format (instead of plain text 'Not found') as other error responses
-    
-    * Update FileAct upload transfer initiation endpoint URL from 'POST /fileact/messages' to 'POST /fileact/transfers'
-
-    * Update FileAct upload transfer ACK endpoint URL from '/fileact/messages/{transfer-id}/acks' to '/fileact/transfers/{transfer-id}/acks'
-    
+    ___
 
   contact:
     name: Standards & Developer Hub
@@ -48,22 +18,18 @@ info:
   license:
     name: API Restricted License
     url: https://www.swift.com/file/56776/download?token=8w8DC4eF
-  version: 2.0.0
+  version: 2.1.0
 servers:
-- url: https://virtserver.swaggerhub.com/SWIFT-API/Swift-Messaging/2.0.0
+- url: https://virtserver.swaggerhub.com/SWIFT-API/Swift-Messaging/2.1.0
   description: SwaggerHub API Auto Mocking
 - url: https://api-test.swiftnet.sipn.swift.com/alliancecloud-test/v2
-  description: Test environment (MV-SIPN)
+  description: Test environment
 - url: https://api.swiftnet.sipn.swift.com/alliancecloud/v2
   description: Production environment
 - url: https://sandbox.swift.com/alliancecloud/v2
   description: Sandbox environment
-- url: https://api-pilot.swift.com/alliancecloud/v2
-  description: Test environment (Internet)
 security:
 - oauthBearerToken: []
-- OAuth2:
-    - swift.alliancecloud.api
 paths:
   /distributions:
     get:
@@ -141,7 +107,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/UnexpectedError'
-      
+
   /distributions/{id}:
     get:
       tags:
@@ -184,7 +150,7 @@ paths:
       tags:
       - fin
       summary: Send a batch of FIN messages to Alliance Cloud.
-      description: |- 
+      description: |-
         This operation enables sending multiple FIN messages to Alliance Cloud, in a single API call. For a given batch request, every single message must have its sender_reference field present and not empty.
         All sender_reference values from the message items must be unique inside a given batch request. A maximum of 500 FIN messages can be sent in one call.
       operationId: sendBatchFinMessages
@@ -210,13 +176,13 @@ paths:
                 $ref: '#/components/schemas/SendBatchMessagesResponse'
               examples:
                 FIN Batch Messages upload response:
-                  $ref: '#/components/examples/FinMessagesUploadBatchResponse'  
+                  $ref: '#/components/examples/FinMessagesUploadBatchResponse'
         "400":
           $ref: '#/components/responses/InvalidRequest'
         "403":
           $ref: '#/components/responses/Forbidden'
         default:
-          $ref: '#/components/responses/UnexpectedError'          
+          $ref: '#/components/responses/UnexpectedError'
 
   /fin/messages:
     post:
@@ -251,7 +217,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/UnexpectedError'
-  
+
     get:
       tags:
       - fin
@@ -278,7 +244,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -294,7 +260,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/UnexpectedError'
-          
+
   /fin/messages/{distribution-id}:
     get:
       tags:
@@ -333,7 +299,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/UnexpectedError'
-    
+
   /fin/transmission-reports:
     get:
       tags:
@@ -376,7 +342,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/UnexpectedError'
-          
+
   /fin/transmission-reports/{distribution-id}:
     get:
       tags:
@@ -415,7 +381,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/UnexpectedError'
-  
+
   /fin/delivery-reports:
     get:
       tags:
@@ -458,7 +424,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/UnexpectedError'
-  
+
   /fin/delivery-reports/{distribution-id}:
     get:
       tags:
@@ -497,7 +463,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/UnexpectedError'
-  
+
   /fin/delivery-notifications:
     get:
       tags:
@@ -540,7 +506,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/UnexpectedError'
-          
+
   /fin/delivery-notifications/{distribution-id}:
     get:
       tags:
@@ -748,7 +714,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/UnexpectedError'
-          
+
   /distributions/{id}/acks:
     post:
       tags:
@@ -769,7 +735,7 @@ paths:
       requestBody:
         content:
           application/json:
-            example: 
+            example:
             schema: {}
       responses:
         "204":
@@ -850,7 +816,7 @@ paths:
                 $ref: '#/components/schemas/SendBatchMessagesResponse'
               examples:
                 InterAct Batch Messages upload response:
-                  $ref: '#/components/examples/InterActMessagesUploadBatchResponse'  
+                  $ref: '#/components/examples/InterActMessagesUploadBatchResponse'
         "400":
           $ref: '#/components/responses/InvalidRequest'
         "403":
@@ -914,7 +880,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -997,7 +963,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -1080,7 +1046,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -1163,7 +1129,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -1430,7 +1396,7 @@ paths:
       summary: This operation completes the whole sending process for a FileAct message.
       description: After having initiated a FileAct message transfer, and sent the payload using the signed URL, this endpoint must be used to complete the operation, notifying Alliance Cloud that the payload upload is done. This operation will actually create the FileAct message in Alliance Cloud and give back its message cloud reference in its response.
       operationId: completeFileActMessageUpload
-      parameters: 
+      parameters:
         - name: transfer-id
           in: path
           description: The transfer ID of the FileAct upload operation to complete
@@ -1443,7 +1409,7 @@ paths:
       requestBody:
         content:
           application/json:
-            example: 
+            example:
             schema: {}
       responses:
         "201":
@@ -1469,7 +1435,7 @@ paths:
       summary: This operation initiates the download of a FileAct message.
       description: Knowing the distribution ID for a FileAct message to download, this operation can be used to both receive the FileAct metadata (companion) information and initiate the FileAct payload download transfer.
       operationId: downloadFileActMessage
-      parameters: 
+      parameters:
         - name: distribution-id
           in: path
           description: The distribution ID for this FileAct message download
@@ -1533,7 +1499,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -1616,7 +1582,7 @@ paths:
           headers:
             X-SWIFT-Integrity:
               $ref: '#/components/headers/X-SWIFT-Integrity'
-            
+
           content:
             application/json:
               schema:
@@ -1716,7 +1682,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/UnexpectedError'
-          
+
   /fileact/exports:
     get:
       tags:
@@ -1803,8 +1769,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/UnexpectedError'
-          
-          
+
+
 components:
   schemas:
     ErrorMessage:
@@ -1889,7 +1855,7 @@ components:
           type: boolean
           default: false
         copy:
-          description: Whether the distribution is about a copy or an original message 
+          description: Whether the distribution is about a copy or an original message
           type: boolean
         message_cloud_reference:
           description: The unique identifier of the message linked to the distribution. For deliveryReport and transmissionReport types, it will be the one of the sent message
@@ -2010,7 +1976,7 @@ components:
             Identifies the version for this received message. Messages that are modified in Alliance Cloud have their version incremented. The initial version of a message is 0
           type: integer
         interface_info:
-          $ref: '#/components/schemas/FinMessageInterfaceInfoReception'          
+          $ref: '#/components/schemas/FinMessageInterfaceInfoReception'
         network_info:
           $ref: '#/components/schemas/FinMessageNetworkInfoReception'
         security_info:
@@ -2696,10 +2662,10 @@ components:
         code:
           type: string
           maxLength: 80
-          description: The code for this event. 
+          description: The code for this event.
         label:
           type: string
-          description: The label for this event. 
+          description: The label for this event.
         time:
           type: string
           format: date-time
@@ -2717,7 +2683,7 @@ components:
           items:
             $ref: '#/components/schemas/HistoryReportLogParameter'
       additionalProperties: true
-      description: Historical log event for a distribution      
+      description: Historical log event for a distribution
 
     HistoryReportLog:
       title: HistoryReportLog
@@ -2726,10 +2692,10 @@ components:
         code:
           type: string
           maxLength: 80
-          description: The code for this event. 
+          description: The code for this event.
         label:
           type: string
-          description: The label for this event. 
+          description: The label for this event.
         time:
           type: string
           format: date-time
@@ -2918,7 +2884,7 @@ components:
           format: byte
         transaction_data_security_result:
           type: string
-          description: |- 
+          description: |-
            For messages received from Transaction Manager, this field indicates the result of the transaction data security validation.
           nullable: true
           enum:
@@ -3066,6 +3032,11 @@ components:
            The distinguished name (DN) of the receiver of the message.
           maxLength: 100
           type: string
+        usage_identifier:
+          description: |-
+           Usage identifier of the message, used to identify the business validation rules to be applied to the message.
+          maxLength: 35
+          type: string
         interface_info:
           $ref: '#/components/schemas/InterActMessageInterfaceInfoEmission'
         network_info:
@@ -3074,7 +3045,7 @@ components:
           $ref: '#/components/schemas/InterActMessageSecurityInfoEmission'
         format:
           description: |-
-           The message format: 
+           The message format:
            - For an MX message: MX
            - For any InterAct message in an XML format not included in a deployment package installed on Alliance Cloud: ANY_XML
           type: string
@@ -3212,6 +3183,11 @@ components:
            The distinguished name of the receiver of the message.
           maxLength: 100
           type: string
+        usage_identifier:
+          description: |-
+           Usage identifier of the message, used to identify the business validation rules to be applied to the message.
+          maxLength: 35
+          type: string
         version:
           description: |-
             Identifies the version for this received message. Messages that are modified in Alliance Cloud have their version incremented. The initial version of a message is 0
@@ -3224,7 +3200,7 @@ components:
           $ref: '#/components/schemas/InterActMessageSecurityInfoReception'
         format:
           description: |-
-           The message format: 
+           The message format:
            - For an MX message: MX
            - For any InterAct message in an XML format not included in a deployment package installed on Alliance Cloud: ANY_XML
           type: string
@@ -3375,7 +3351,7 @@ components:
             $ref: '#/components/schemas/PayloadAttribute'
         copy_requested:
           description: |-
-           True when the SWIFTNet copy feature is optional for that service and a copy must be made. 
+           True when the SWIFTNet copy feature is optional for that service and a copy must be made.
            When absent, a copy is only made when the copy feature is defined as mandatory for the service.
            If the copy service is defined as mandatory, then this value cannot be false.
           type: boolean
@@ -3433,7 +3409,7 @@ components:
           type: string
         request_type:
           description: |-
-            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier. 
+            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier.
             For MX messages, it corresponds to the namespace URI of the XML document in the body of the message.
           maxLength: 30
           type: string
@@ -3441,6 +3417,15 @@ components:
           description: |-
             Indicates if the message has been generated by the Transaction Manager at SWIFT.
           type: boolean
+        contingency_processing_code:
+          description: |-
+            Indicates the conversion applied to the message, by either the Transaction Manager or the MT to ISO 20022 conversion service. This code can currently have the following values:
+                - TDOK: Transaction Manager generated the message based on an ISO 20022 message provided by the Sender.
+                - TDCV: Transaction Manager generated the message based on a FIN message provided by the Sender.
+                - CONV: MT to ISO 20022 conversion service produced the MX message based on an MT message that did not result in creating or updating transaction data.
+              If the value is TDOK or TDCV, the value of the 'processed_by_transaction_manager' field will be 'true'
+          type: string
+          maxLength: 30
         screening_info_for_receiver:
           description: |-
             Contains information from the Transaction Screening service to the receiver about the message screening result.
@@ -3451,7 +3436,7 @@ components:
         end_to_end_sender_info:
           maxLength: 256
           type: string
-          description: |- 
+          description: |-
            This field provides additional information regarding the exchanged messages between the Requestor and the Responder.
       description: The network information elements for an InterAct message received from Alliance Cloud.
     InterActMessageSecurityInfoReception:
@@ -3542,7 +3527,7 @@ components:
           - Unauthorised
         transaction_data_security_result:
           type: string
-          description: |- 
+          description: |-
            For messages received from Transaction Manager, this field indicates the result of the transaction data security validation.
           nullable: true
           enum:
@@ -3598,7 +3583,7 @@ components:
           format: int32
         copy_requested:
           description: |-
-           True when the SWIFTNet copy feature is optional for that service and a copy must be made. 
+           True when the SWIFTNet copy feature is optional for that service and a copy must be made.
            When absent, a copy is only made when the copy feature is defined as mandatory for the service.
            If the copy service is defined as mandatory, then this value cannot be false.
           type: boolean
@@ -3644,14 +3629,14 @@ components:
           type: string
         request_type:
           description: |-
-            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier. 
+            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier.
             For MX messages, it corresponds to the namespace URI of the XML document in the body of the message.
           maxLength: 30
           type: string
         end_to_end_sender_info:
           maxLength: 256
           type: string
-          description: |- 
+          description: |-
            This field provides additional information regarding the exchanged messages between the Requestor and the Responder.
       description: The network information elements for an InterAct message sent to Alliance Cloud.
     InterActMessageSecurityInfoEmission:
@@ -4204,7 +4189,7 @@ components:
       title: FileActMessageEmission
       type: object
       additionalProperties: false
-      required: 
+      required:
       - file_transfer_request
       - companion_info
       properties:
@@ -4218,7 +4203,7 @@ components:
       title: FileTransferRequest
       type: object
       additionalProperties: false
-      required: 
+      required:
       - file_attributes
       - file_operation
       - encryption_attributes
@@ -4235,7 +4220,7 @@ components:
       title: FileTransferRequestFileAttributes
       type: object
       additionalProperties: false
-      required: 
+      required:
       - file_name
       properties:
         file_name:
@@ -4280,7 +4265,7 @@ components:
       title: FileTransferRequestFileAttributes
       type: object
       additionalProperties: false
-      required: 
+      required:
       - key_alg
       - key_value
       - key_digest_alg
@@ -4429,7 +4414,7 @@ components:
           format: int32
         copy_requested:
           description: |-
-           True when the SWIFTNet copy feature is optional for that service and a copy must be made. 
+           True when the SWIFTNet copy feature is optional for that service and a copy must be made.
            When absent, a copy is only made when the copy feature is defined as mandatory for the service.
            If the copy service is defined as mandatory, then this value cannot be false.
           type: boolean
@@ -4488,14 +4473,14 @@ components:
           type: boolean
         request_type:
           description: |-
-            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier. 
+            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier.
             For MX messages, it corresponds to the namespace URI of the XML document in the body of the message.
           maxLength: 30
           type: string
         end_to_end_sender_info:
           maxLength: 256
           type: string
-          description: |- 
+          description: |-
            This field provides additional information regarding the exchanged messages between the Requestor and the Responder.
     FileActCompanionSecurityInfoEmission:
       description: |-
@@ -4565,11 +4550,11 @@ components:
       title: SingleMessageUploadResult
       type: object
       additionalProperties: true
-      required: 
+      required:
         - sender_reference
         - result
       properties:
-        sender_reference: 
+        sender_reference:
           description: |-
             The sent message sender_reference, used to correlate this result with a sent message
           type: string
@@ -4606,7 +4591,7 @@ components:
       title: FileActMessageUploadResponse
       type: object
       additionalProperties: true
-      required: 
+      required:
       - file_transfer_response
       - transfer_id
       properties:
@@ -4623,7 +4608,7 @@ components:
       title: FileTransferResponse
       type: object
       additionalProperties: true
-      required: 
+      required:
       - signed_urls
       properties:
         signed_urls:
@@ -4649,7 +4634,7 @@ components:
           type: integer
         url:
           description: |-
-            The signed URL as generated bhy the service. 
+            The signed URL as generated bhy the service.
           type: string
     FileTransferResponseOperation:
       description: |-
@@ -4761,7 +4746,7 @@ components:
       title: FileActMessageDownloadRequest
       type: object
       additionalProperties: false
-      required: 
+      required:
       - file_transfer_request
       properties:
         file_transfer_request:
@@ -4772,7 +4757,7 @@ components:
       title: FileActMessageDownloadResponse
       type: object
       additionalProperties: true
-      required: 
+      required:
       - distribution
       - file_transfer_response
       - companion_info
@@ -4787,7 +4772,7 @@ components:
       title: FileActTransmissionReportDownloadResponse
       type: object
       additionalProperties: true
-      description: |- 
+      description: |-
         The response contents for a FileAct transmission report distribution download
       properties:
         distribution:
@@ -4798,7 +4783,7 @@ components:
       title: FileActDeliveryReportDownloadResponse
       type: object
       additionalProperties: true
-      description: |- 
+      description: |-
         The response contents for a FileAct delivery report distribution download
       properties:
         distribution:
@@ -5033,7 +5018,7 @@ components:
             $ref: '#/components/schemas/PayloadAttribute'
         copy_requested:
           description: |-
-           True when the SWIFTNet copy feature is optional for that service and a copy must be made. 
+           True when the SWIFTNet copy feature is optional for that service and a copy must be made.
            When absent, a copy is only made when the copy feature is defined as mandatory for the service.
            If the copy service is defined as mandatory, then this value cannot be false.
           type: boolean
@@ -5126,12 +5111,12 @@ components:
           maxLength: 25
         request_type:
           description: |-
-            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier. 
+            Contains the request type of the message. If the request type is not present, then for AnyXML messages, the request type is assumed to be the same as the message identifier.
             For MX messages, it corresponds to the namespace URI of the XML document in the body of the message.
           maxLength: 30
           type: string
         end_to_end_sender_info:
-          description: |- 
+          description: |-
            This field provides additional information regarding the exchanged messages between the Requestor and the Responder.
           maxLength: 256
           type: string
@@ -5587,7 +5572,7 @@ components:
       title: DistributionUpdate
       type: object
       additionalProperties: false
-      required: 
+      required:
         - id
         - status
       properties:
@@ -5596,15 +5581,15 @@ components:
            The id of the distribution to update.
           type: integer
           format: int64
-        status: 
+        status:
           description: |-
            The desired status to have for this distribution.
           type: string
           nullable: true
-          enum: 
+          enum:
           - Ack
           - Nak
-        status_update_message: 
+        status_update_message:
           description: |-
            An message linked to this update. Only useful when the desired status is 'Nak'
           type: string
@@ -5620,7 +5605,7 @@ components:
       title: DistributionUpdateResponse
       type: object
       additionalProperties: true
-      required: 
+      required:
         - id
         - result
       properties:
@@ -5629,11 +5614,11 @@ components:
            The id of the updated distribution.
           type: integer
           format: int64
-        result: 
+        result:
           description: |-
            The update result. 'OK' indicates that the desired state was reached. The other possible resumt is 'NotFound', if the provided distribution id could not be linked to an existing distribution.
           type: string
-          enum: 
+          enum:
           - OK
           - NotFound
       description: The result of an update on a distribution.
@@ -5937,7 +5922,7 @@ components:
           distribution_tag: high-value-payment
           transmission_possible_duplicate: false
           copy: false
-            
+
           links:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/44984189499
               rel: self
@@ -6006,7 +5991,7 @@ components:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/fin/transmission-reports/44984189500
                 rel: download
                 type: GET
-          
+
           transmission_report:
             sender_reference: LOW-000082027617
             message_input_reference: 200727ITLIBEBAXXXX0001000017
@@ -6308,7 +6293,7 @@ components:
           distribution_tag: high-value-payment
           transmission_possible_duplicate: false
           copy: false
-            
+
           links:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446205
               rel: self
@@ -6377,7 +6362,7 @@ components:
               label: Pending distribution
               time: 2023-09-04T11:53:43.394Z
               user: System
-              description: To Channel32f0f7b9e-20cf-429c-a2fe 
+              description: To Channel32f0f7b9e-20cf-429c-a2fe
               parameters:
               - code: CHANNEL
                 value: Channel32f0f7b9e-20cf-429c-a2fe
@@ -6385,11 +6370,11 @@ components:
               label: Distributed
               time: 2023-09-04T11:54:29.077Z
               user: System
-              description: To Channel4c8a595b9-7a1a-4fb4-90df 
-              parameters: []            
+              description: To Channel4c8a595b9-7a1a-4fb4-90df
+              parameters: []
           transmission_reports: []
           delivery_reports: []
-      
+
     FinArchiveDownloadBatchResponse:
       summary: Response for a FIN archive batch download
       description: Contents for a batch response containing FIN archives
@@ -6402,7 +6387,7 @@ components:
             distribution_tag: high-value-payment
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446205
                 rel: self
@@ -6471,7 +6456,7 @@ components:
                 label: Pending distribution
                 time: 2023-09-04T11:53:43.394Z
                 user: System
-                description: To Channel32f0f7b9e-20cf-429c-a2fe 
+                description: To Channel32f0f7b9e-20cf-429c-a2fe
                 parameters:
                 - code: CHANNEL
                   value: Channel32f0f7b9e-20cf-429c-a2fe
@@ -6480,7 +6465,7 @@ components:
                 time: 2023-09-04T11:54:29.077Z
                 user: System
                 description: To Channel32f0f7b9e-20cf-429c-a2fe
-                parameters: []            
+                parameters: []
             transmission_reports: []
             delivery_reports: []
         - distribution:
@@ -6581,7 +6566,7 @@ components:
           export_format: pdf
           transmission_possible_duplicate: false
           copy: false
-            
+
           links:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446257
               rel: self
@@ -6609,7 +6594,7 @@ components:
             export_format: pdf
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446257
                 rel: self
@@ -6633,7 +6618,7 @@ components:
             export_format: pdf
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446259
                 rel: self
@@ -6689,6 +6674,7 @@ components:
         - sender_reference: AUTO-00094933780
           service_code: swift.if.ia
           message_type: semt.006.001.02
+          usage_identifier: trgt.t2s.t2s.01
           requestor: ou=orca,o=swllus33,o=swift
           responder: ou=mfunds,o=swhqbebb,o=swift
           network_info:
@@ -6767,6 +6753,7 @@ components:
             direction: Incoming
             requestor: ou=orca,o=swllus33,o=swift
             responder: ou=mfunds,o=swhqbebb,o=swift
+            usage_identifier: trgt.t2s.t2s.01
             version: 0
             network_info:
               user_reference: IE19080850952607
@@ -6787,7 +6774,8 @@ components:
               copy_original_snf_reference: SWIFTNET_COPY_ORIGIN_SNF_REF
               swift_reference: SWITCH21-2020-07-28T08:54:17.0448.4312Z
               response_swift_reference: SWITCH21-2020-07-28T08:54:17.0449.4312Z
-              processed_by_transaction_manager: false
+              processed_by_transaction_manager: true
+              contingency_processing_code: TDOK
               distribution_info:
                 recipient_dn_list:
                 - ou=orca,o=swllus33,o=swift
@@ -7267,7 +7255,7 @@ components:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/interact/archives/44984189489
               rel: download
               type: GET
-        archive: 
+        archive:
           message:
             sender_reference: 519ab4f6-9f94-44f5-b670-7f03c87fdfa3
             service_code: swift.if.ia
@@ -7335,20 +7323,20 @@ components:
               label: Pending distribution
               time: 2023-07-04T11:53:43.394Z
               user: System
-              description: To Channel4c8a595b9-7a1a-4fb4-90df 
+              description: To Channel4c8a595b9-7a1a-4fb4-90df
               parameters:
               - code: CHANNEL
-                value: Channel4c8a595b9-7a1a-4fb4-90df 
+                value: Channel4c8a595b9-7a1a-4fb4-90df
             - code: DISTRIBUTED
               label: Distributed
               time: 2023-07-04T11:54:29.077Z
               user: System
-              description: To Channel4c8a595b9-7a1a-4fb4-90df 
+              description: To Channel4c8a595b9-7a1a-4fb4-90df
               parameters: []
           delivery_reports: []
           transmission_reports: []
-    
-    InterActArchiveDownloadBatchResponse:    
+
+    InterActArchiveDownloadBatchResponse:
       summary: InterAct multiple archives download
       description: Contents for a multiple InterAct archives download response
       value:
@@ -7372,7 +7360,7 @@ components:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/interact/archives/44984189489
               rel: download
               type: GET
-        archive: 
+        archive:
           message:
             sender_reference: 519ab4f6-9f94-44f5-b670-7f03c87fdfa3
             service_code: swift.if.ia
@@ -7440,15 +7428,15 @@ components:
               label: Pending distribution
               time: 2023-07-04T11:53:43.394Z
               user: System
-              description: To Channel4c8a595b9-7a1a-4fb4-90df 
+              description: To Channel4c8a595b9-7a1a-4fb4-90df
               parameters:
               - code: CHANNEL
-                value: Channel4c8a595b9-7a1a-4fb4-90df 
+                value: Channel4c8a595b9-7a1a-4fb4-90df
             - code: DISTRIBUTED
               label: Distributed
               time: 2023-07-04T11:54:29.077Z
               user: System
-              description: To Channel4c8a595b9-7a1a-4fb4-90df 
+              description: To Channel4c8a595b9-7a1a-4fb4-90df
               parameters: []
           delivery_reports: []
           transmission_reports: []
@@ -7465,7 +7453,7 @@ components:
           export_format: pdf
           transmission_possible_duplicate: false
           copy: false
-            
+
           links:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446447
               rel: self
@@ -7494,7 +7482,7 @@ components:
             export_format: pdf
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446447
                 rel: self
@@ -7518,7 +7506,7 @@ components:
             export_format: pdf
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446449
                 rel: self
@@ -8123,7 +8111,7 @@ components:
               label: Pending distribution
               time: 2023-07-01T11:53:43.394Z
               user: System
-              description: To ChannelArchive 
+              description: To ChannelArchive
               parameters:
               - code: CHANNEL
                 value: ChannelArchive
@@ -8131,14 +8119,14 @@ components:
               label: Distributed
               time: 2023-07-01T11:54:29.077Z
               user: System
-              description: To ChannelArchive 
+              description: To ChannelArchive
               parameters: []
           transmission_reports: []
           delivery_reports: []
-    
+
     FileActExportDownloadResponse:
       summary: Response for a FileAct export download
-      description: Contents for a response containing a FileAct export 
+      description: Contents for a response containing a FileAct export
       value:
         distribution:
           id: 54043195528446839
@@ -8149,7 +8137,7 @@ components:
           export_format: pdf
           transmission_possible_duplicate: false
           copy: false
-            
+
           links:
             - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446839
               rel: self
@@ -8164,7 +8152,7 @@ components:
               rel: download
               type: GET
         export: "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l2eOXoIcw2J6i+mS1Vocvf+mkteuSeH8cvD3GL4xOE7+BW1DybUNCmVuZHN0cmVhbQplbmRvYmoKMTIgMCBvYmoKPDwKL0ZvbnQgMTUgMCBSCj4+CmVuZG9iagoxMyAwIG9iago8PAovRjEgMTYgMCBSCi9GMiAxNyAwIFIKPj4KZW5kb2JqCjE0IDAgb2JqCjw8Ci9GMSAxNiAwIFIKL0YyIDE3IDAgUgo+PgplbmRvYmoKMTUgMCBvYmoKPDwKL0YxIDE2IDAgUgo+PgplbmRvYmoKMTYgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL0Jhc2VGb250IC9BQUFDSUcrTGliZXJhdGlvblNhbnMKL1N1YnR5cGUgL1R5cGUwCi9FbmNvZGluZyAvSWRlbnRpdHktSAovRGVzY2VuZGFudEZvbnRzIFsxOCAwIFJdCi9Ub1VuaWNvZGUgMTkgMCBSCj4+CmVuZG9iagoxNyAwIG9iago8PAovVHlwZSAvRm9udAovQmFzZUZvbnQgL0FBQVdZRitMaWJlcmF0aW9uU2Fucy1Cb2xkCi9TdWJ0eXBlIC9UeXBlMAovRW5jb2RpbmcgL0lkZW50aXR5LUgKL0Rlc2NlbmRhbnRGb250cyBbMjAgMCBSXQovVG9Vbmljb2RlIDIxIDAgUgo+PgplbmRvYmoKMTggMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL0NJREZvbnRUeXBlMgovQmFzZUZvbnQgL0FBQUNJRytMaWJlcmF0aW9uU2FucwovQ0lEU3lzdGVtSW5mbyAyMiAwIFIKL0ZvbnREZXNjcmlwdG9yIDIzIDAgUgovVyBbMCBbNzUwXQogMyBbMjc4XQogNSBbMzU1XQogMTEgWzMzMyAzMzNdCiAxNSBbMjc4IDMzMyAyNzggMjc4IDU1NiA1NTYgNTU2IDU1NiA1NTYgNTU2CjU1NiA1NTYgNTU2IDU1NiAyNzhdCjMxIFs1ODQgNTg0IDU4NF0KIDM2IFs2NjcgNjY3IDcyMiA3MjIgNjY3IDYxMSA3NzggNzIyIDI3OCA1MDAKNjY3IDU1NiA4MzMgNzIyIDc3OCA2NjcgNzc4IDcyMiA2NjcgNjExCjcyMiA2NjcgOTQ0IDY2NyA2NjcgNjExXQogNjYgWzU1Nl0KIDY4IFs1NTYgNTU2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U8GXlw7ylmGKKU0t5YKlc0q5LrCr6cWJ3onFMd6SYr93Ak7638WoBBhU4qlSslxVMlirbFnWKgS0VUB6vV0g7/IYMbOp6Zh7rQXWWusyq2C1ZlhLrU3WDuspa69VX4B1Z608hslSAm0KHja7YP3OyilpaZO69L0Vk0L6smkhWBVKnEKfavnUkG5ViFRNnVa9E+DB4K/XrSPj4iaFsqZUh+rigpNCDfii0pc2fLHF7VTIuGBLa0vrwrTIB1paaUZo1oIvLS20CWhVPwmrbmlpbW0l4S4taS0kjT6xAfBJWhgh0lBiyivyB/RJ6HBsGGCULa2UiHVeSJ+sRGspI/bBEVr6h2ecw1n0/wCOyfGRDQplbmRzdHJlYW0KZW5kb2JqCjMxIDAgb2JqCjw8Ci9MZW5ndGggMTMKL0ZpbHRlciAvRmxhdGVEZWNvZGUKPj4Kc3RyZWFtDQp4nPv/Hw5+AABNtwvuDQplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAzMgowMDAwMDAwMDAwIDY1NTM1IGYNCjAwMDAwMDAwMTUgMDAwMDAgbg0KMDAwMDAwMDIxMCAwMDAwMCBuDQowMDAwMDAwMDc4IDAwMDAwIG4NCjAwMDAwMDAyNzkgMDAwMDAgbg0KMDAwMDAwMDM5NSAwMDAwMCBuDQowMDAwMDAwNTEyIDAwMDAwIG4NCjAwMDAwMDA2MzAgMDAwMDAgbg0KMDAwMDAwMzczMCAwMDAwMCBuDQowMDAwMDAzNzY0IDAwMDAwIG4NCjAwMDAwMDcwNjIgMDAwMDAgbg0KMDAwMDAwNzA5NyAwMDAwMCBuDQowMDAwMDA4MTU3IDAwMDAwIG4NCjAwMDAwMDgxOTIgMDAwMDAgbg0KMDAwMDAwODIzNiAwMDAwMCBuDQowMDAwMDA4MjgwIDAwMDAwIG4NCjAwMDAwMDgzMTMgMDAwMDAgbg0KMDAwMDAwODQ2MiAwMDAwMCBuDQowMDAwMDA4NjE2IDAwMDAwIG4NCjAwMDAwMDkxMzAgMDAwMDAgbg0KMDAwMDAwOTQ4MiAwMDAwMCBuDQowMDAwMDA5OTI1IDAwMDAwIG4NCjAwMDAwMTAzMjggMDAwMDAgbg0KMDAwMDAxMDQwMyAwMDAwMCBuDQowMDAwMDEwNzAzIDAwMDAwIG4NCjAwMDAwMTA5MTMgMDAwMDAgbg0KMDAwMDAxMDk4OCAwMDAwMCBuDQowMDAwMDExMjkzIDAwMDAwIG4NCjAwMDAwMTE0NjMgMDAwMDAgbg0KMDAwMDAyNDAwMiAwMDAwMCBuDQowMDAwMDI0MDg5IDAwMDAwIG4NCjAwMDAwMzM1ODkgMDAwMDAgbg0KdHJhaWxlcgo8PAovUm9vdCAxIDAgUgovSW5mbyAzIDAgUgovSUQgWzw5NTY2MDA4MDE1Rjk5NDZBNzRDQkYzQjg0RkJDQ0RDOD4gPDk1NjYwMDgwMTVGOTk0NkE3NENCRjNCODRGQkNDREM4Pl0KL1NpemUgMzIKPj4Kc3RhcnR4cmVmCjMzNjc2CiUlRU9GCg=="
-    
+
     FileActExportDownloadBatchResponse:
       summary: Response for a FileAct export batch download
       description: Contents for a response containing a batch of FileAct exports
@@ -8178,7 +8166,7 @@ components:
             export_format: pdf
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446839
                 rel: self
@@ -8202,7 +8190,7 @@ components:
             export_format: pdf
             transmission_possible_duplicate: false
             copy: false
-            
+
             links:
               - href: https://api.swiftnet.sipn.swift.com/alliancecloud/v2/distributions/54043195528446841
                 rel: self
@@ -8257,7 +8245,7 @@ components:
   headers:
     X-SWIFT-Integrity:
       required: true
-      description: |- 
+      description: |-
         Header containing content integrity information. This is an application level signature produced based on asymmetric cryptography (see [JWS](https://tools.ietf.org/html/rfc7515)). The main input data elements used to compute the signature are:
         * HTTP response body
         See [RFC 7519](https://tools.ietf.org/html/rfc7519)
@@ -8271,11 +8259,3 @@ components:
       description: "\nThe access token obtained as a result of OAuth 2.0 flows. SWIFT supports two OAuth grant types depending on the API service.\n* JWT-Bearer grant type [RFC 7523](https://tools.ietf.org/html/rfc7523)\n* Password grant type\n\nThis API uses JWT-Bearer grant type.\n\nPlease visit [SWIFT OAuth Token API](https://developer.swift.com/swift-oauth-token-api) page for more information and examples on how to generate an OAuth token.\n  \nIn this declaration only the basic security element to transport the bearer token of an OAuth2 process is declared."
       scheme: bearer
       bearerFormat: opaque OAuth 2.0
-    OAuth2:
-      type: oauth2
-      flows:
-        clientCredentials:   # JWT is not natively supported, but this enables the button
-          tokenUrl: https://sandbox.swift.com/oauth2/v1/token
-          scopes:
-            swift.alliancecloud.api: Access SWIFT APIs
-
