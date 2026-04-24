@@ -1,6 +1,6 @@
 services:
   swift-swagger-ui:
-    image: everyday-ai/swift-swagger-ui:20260423
+    image: everyday-ai/swift-swagger-ui:20260424
     container_name: swift-swagger-ui
     ports:
       - "83:8080"
